@@ -15,8 +15,8 @@ class Node(QtGui.QGraphicsItem):
 
     It can be created, removed and modified by the user in the UI.
     """
-    def __init__(self, **kwargs):
-        super(Node, self).__init__(**kwargs)
+    def __init__(self, *args,  **kwargs):
+        super(Node, self).__init__(*args, **kwargs)
 
         # This unique id is useful for serialization/reconstruction.
         self.uuid = str(uuid.uuid4())
@@ -43,6 +43,16 @@ class Node(QtGui.QGraphicsItem):
         self.setAcceptTouchEvents(True)
         self.setAcceptDrops(True)
 
+        self.data = {}
+
+    def receive(self, nodeName, data):
+        self.data[nodeName] = data
+        if len(self.data) == len(self.knobs(InputKnob)):
+            self.run()
+
+    def run(self):
+        pass
+
     def knobs(self, cls=None):
         """Return a list of childItems that are Knob objects.
 
@@ -55,7 +65,7 @@ class Node(QtGui.QGraphicsItem):
                 knobs.append(child)
 
         if cls:
-            knobs = filter(knobs, lambda k: k.__class__ is cls)
+            knobs = [k for k in knobs if isinstance(k, cls)]
 
         return knobs
 

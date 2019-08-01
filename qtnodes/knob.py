@@ -39,6 +39,7 @@ class Knob(QtGui.QGraphicsItem):
         self.newEdge = None
 
         self.edges = []
+        self.connectedTo = []
 
         self.setAcceptHoverEvents(True)
 
@@ -56,6 +57,10 @@ class Knob(QtGui.QGraphicsItem):
         if knob is self:
             return
 
+        if type(self) == type(knob):
+            raise KnobConnectionError(
+                "Can't connect Knobs of same type.")
+
         self.checkMaxConnections(knob)
 
         edge = Edge()
@@ -66,6 +71,7 @@ class Knob(QtGui.QGraphicsItem):
         knob.addEdge(edge)
 
         edge.updatePath()
+        self.connectedTo.append(knob)
 
     def addEdge(self, edge):
         """Add the given Edge to the internal tracking list.
@@ -306,6 +312,9 @@ class InputKnob(Knob):
     def finalizeEdge(self, edge):
         ensureEdgeDirection(edge)
 
+    def receive(self, data):
+        self.node().receive(self.name, data)
+
 
 class OutputKnob(Knob):
     """A Knob that represents an output value for its Node."""
@@ -319,3 +328,7 @@ class OutputKnob(Knob):
 
     def finalizeEdge(self, edge):
         ensureEdgeDirection(edge)
+
+    def send(self, data):
+        for knob in self.connectedTo:
+            knob.receive(data)
