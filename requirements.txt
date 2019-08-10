@@ -1,3 +1,3 @@
 appdirs==1.4.0
 pydot==1.0.2  # For tree layouting. Needs graphviz.
-PySide==1.2.4
+pyside2==5.13.0

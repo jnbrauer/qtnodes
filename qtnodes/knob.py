@@ -1,7 +1,8 @@
 """Knob classes."""
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtGui
+from PySide2 import QtCore
 
 from .helpers import getTextSize
 from .exceptions import KnobConnectionError, UnknownFlowError
@@ -13,7 +14,7 @@ FLOW_LEFT_TO_RIGHT = "flow_left_to_right"
 FLOW_RIGHT_TO_LEFT = "flow_right_to_left"
 
 
-class Knob(QtGui.QGraphicsItem):
+class Knob(QtWidgets.QGraphicsItem):
     """A Knob is a socket of a Node and can be connected to other Knobs."""
 
     def __init__(self, **kwargs):

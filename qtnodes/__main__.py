@@ -1,6 +1,6 @@
 """Manual tests."""
 
-from PySide import QtGui
+from PySide2 import QtWidgets
 
 from .knob import InputKnob, OutputKnob
 from .header import Header
@@ -147,7 +147,7 @@ class MaxObject(Node):
 
 
 def test():
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
 
     graph = NodeGraphWidget()
     graph.setGeometry(100, 100, 800, 600)
@@ -169,13 +169,16 @@ def test():
     nodeInt2 = Integer(scene=graph.scene)
     nodeMult = Multiply(scene=graph.scene)
     nodeOut = Output(scene=graph.scene)
-    # nodeBig = BigNode(scene=graph.scene)
-    #
+
+    graph.addNode(nodeInt1)
+    graph.addNode(nodeInt2)
+    graph.addNode(nodeMult)
+    graph.addNode(nodeOut)
+
     nodeInt2.moveBy(100, 250)
     nodeMult.moveBy(200, 100)
-    # nodeBig.moveBy(300, 50)
     nodeOut.moveBy(400, 150)
-    #
+
     nodeInt1.knob("value").connectTo(nodeMult.knob("x"))
     nodeInt2.knob("value").connectTo(nodeMult.knob("y"))
     nodeMult.knob("value").connectTo(nodeOut.knob("output"))
@@ -185,26 +188,6 @@ def test():
 
     nodeInt1.run()
     nodeInt2.run()
-    #
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i1"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i2"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i3"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i4"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i5"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i6"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i7"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i8"))
-    # nodeMult.knob("value").connectTo(nodeBig.knob("i9"))
-    #
-    # nodeBig.knob("o1").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o2").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o3").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o4").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o5").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o6").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o7").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o8").connectTo(nodeOut.knob("output"))
-    # nodeBig.knob("o9").connectTo(nodeOut.knob("output"))
 
     app.exec_()
 

@@ -2,8 +2,9 @@
 
 import json
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtGui
+from PySide2 import QtCore
 
 
 def readFileContent(filePath):

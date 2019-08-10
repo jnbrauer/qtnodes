@@ -6,8 +6,9 @@ Regarding the slightly weird signal connection syntax refer to:
 """
 import os
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtGui
+from PySide2 import QtCore
 
 from .node import Node
 from .view import GridView
@@ -15,21 +16,21 @@ from .layout import autoLayout
 from . import serializer
 
 
-class NodeGraphWidget(QtGui.QWidget):
+class NodeGraphWidget(QtWidgets.QWidget):
     """Display the node graph and offer editing functionality."""
 
     def __init__(self, parent=None):
         super(NodeGraphWidget, self).__init__(parent=parent)
 
-        self.scene = QtGui.QGraphicsScene()
+        self.scene = QtWidgets.QGraphicsScene()
         self.view = GridView()
         self.view.setScene(self.scene)
 
         self.view.setRenderHint(QtGui.QPainter.Antialiasing)
         self.view.setViewportUpdateMode(
-            QtGui.QGraphicsView.FullViewportUpdate)
+            QtWidgets.QGraphicsView.FullViewportUpdate)
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.view)
         self.setLayout(layout)
 
@@ -45,7 +46,7 @@ class NodeGraphWidget(QtGui.QWidget):
         FIXME: The GC does all the work here, which is probably not the
         finest solution, but works for now.
         """
-        self.scene = QtGui.QGraphicsScene()
+        self.scene = QtWidgets.QGraphicsScene()
         self.view.setScene(self.scene)
 
     def keyPressEvent(self, event):
@@ -65,7 +66,7 @@ class NodeGraphWidget(QtGui.QWidget):
         subMenu = menu.addMenu("Scene")
 
         def _saveSceneAs():
-            filePath, _ = QtGui.QFileDialog.getSaveFileName(
+            filePath, _ = QtWidgets.QFileDialog.getSaveFileName(
                 self,
                 "Save Scene to JSON",
                 os.path.join(QtCore.QDir.currentPath(), "scene.json"),
@@ -79,7 +80,7 @@ class NodeGraphWidget(QtGui.QWidget):
         saveToAction.triggered.connect(_saveSceneAs)
 
         def _loadSceneFrom():
-            filePath, _ = QtGui.QFileDialog.getOpenFileName(
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(
                 self,
                 "Open Scene JSON File",
                 os.path.join(QtCore.QDir.currentPath(), "scene.json"),
@@ -95,7 +96,7 @@ class NodeGraphWidget(QtGui.QWidget):
         loadFromAction.triggered.connect(_loadSceneFrom)
 
         def _mergeSceneFrom():
-            filePath, _ = QtGui.QFileDialog.getOpenFileName(
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(
                 self,
                 "Open Scene JSON File",
                 os.path.join(QtCore.QDir.currentPath(), "scene.json"),
@@ -119,7 +120,7 @@ class NodeGraphWidget(QtGui.QWidget):
 
         def _storeCurrentScene():
             self.lastStoredSceneData = serializer.serializeScene(self.scene)
-            QtGui.QMessageBox.information(self, "Hold",
+            QtWidgets.QMessageBox.information(self, "Hold",
                                           "Scene state holded.")
 
         holdAction = subMenu.addAction("Hold")
@@ -131,7 +132,7 @@ class NodeGraphWidget(QtGui.QWidget):
                 return
             self.clearScene()
             serializer.reconstructScene(self, self.lastStoredSceneData)
-            QtGui.QMessageBox.information(self, "Fetch",
+            QtWidgets.QMessageBox.information(self, "Fetch",
                                           "Scene state fetched.")
 
         fetchAction = subMenu.addAction("Fetch")
@@ -156,12 +157,11 @@ class NodeGraphWidget(QtGui.QWidget):
         for cls in self.nodeClasses:
             className = cls.__name__
             action = subMenu.addAction(className)
-            action.triggered[()].connect(
-                lambda cls=cls: self._createNode(cls))
+            action.triggered[()].connect(lambda checked=False, cls=cls: self._createNode(cls))
 
     def contextMenuEvent(self, event):
         """Show a menu to create registered Nodes."""
-        menu = QtGui.QMenu(self)
+        menu = QtWidgets.QMenu(self)
         self.addNodesMenuActions(menu)
         self.addSceneMenuActions(menu)
         menu.exec_(event.globalPos())

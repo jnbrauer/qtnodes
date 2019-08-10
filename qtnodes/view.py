@@ -1,7 +1,8 @@
 """Custom QGraphicsView."""
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtGui
+from PySide2 import QtCore
 
 from .node import Node
 from .edge import Edge
@@ -11,7 +12,7 @@ CURRENT_ZOOM = 1.0
 ALTERNATE_MODE_KEY = QtCore.Qt.Key.Key_Alt
 
 
-class GridView(QtGui.QGraphicsView):
+class GridView(QtWidgets.QGraphicsView):
     """This view will draw a grid in its background."""
 
     def __init__(self, *args, **kwargs):
@@ -31,8 +32,8 @@ class GridView(QtGui.QGraphicsView):
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
-        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
-        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 
     def nodes(self):
         """Return all Nodes in the scene."""
@@ -62,12 +63,12 @@ class GridView(QtGui.QGraphicsView):
     def mousePressEvent(self, event):
         """Initiate custom panning using middle mouse button."""
         if event.button() == QtCore.Qt.MiddleButton:
-            self.setDragMode(QtGui.QGraphicsView.NoDrag)
+            self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
             self.panning = True
             self.prevPos = event.pos()
             self.setCursor(QtCore.Qt.SizeAllCursor)
         elif event.button() == QtCore.Qt.LeftButton:
-            self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+            self.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
         super(GridView, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
